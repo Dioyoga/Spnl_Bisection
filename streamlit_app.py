@@ -18,3 +18,54 @@ with col2:
     b = st.number_input("Batas atas b", value=1.0, format="%.6f")
 tol = st.number_input("Toleransi (epsilon)", value=1e-6, format="%.10f")
 max_iter = st.number_input("Max iterasi", min_value=1, value=50, step=1)
+
+# Parse fungsi dengan sympy
+x = sp.symbols('x')
+try:
+    expr = sp.sympify(f_input)
+    f_lamb = sp.lambdify(x, expr, 'numpy')
+    func_ok = True
+except Exception as e:
+    st.error(f"Error parsing fungsi: {e}")
+    func_ok = False
+
+def bisection(f, a, b, tol=1e-6, max_iter=50):
+    fa = f(a)
+    fb = f(b)
+    if math.isnan(fa) or math.isnan(fb):
+        return {"error": "f(a) atau f(b) bukan angka (NaN). Periksa domain fungsi."}
+    if fa * fb > 0:
+        return {"error": "f(a) dan f(b) harus memiliki tanda berlawanan."}
+    rows = []
+    for i in range(1, max_iter+1):
+        c = (a + b) / 2.0
+        fc = f(c)
+        rows.append({"iter": i, "a": a, "b": b, "c": c, "f(a)": fa, "f(b)": fb, "f(c)": fc, "interval_length": b - a})
+        if abs(fc) < tol or (b-a)/2 < tol:
+            return {"result": c, "f(c)": fc, "iterations": i, "table": pd.DataFrame(rows)}
+        # update interval
+        if fa * fc < 0:
+            b = c
+            fb = fc
+        else:
+            a = c
+            fa = fc
+    # jika mencapai batas iterasi
+    return {"result": (a+b)/2, "f(c)": f((a+b)/2), "iterations": max_iter, "table": pd.DataFrame(rows), "warning": "Max iter reached"}
+
+if st.button("Jalankan Bisection") and func_ok:
+    with st.spinner("Menjalankan metode..."):
+        try:
+            res = bisection(f_lamb, float(a), float(b), tol=float(tol), max_iter=int(max_iter))
+        except Exception as e:
+            st.error(f"Terjadi error saat menjalankan metode: {e}")
+            st.stop()
+
+    if "error" in res:
+        st.error(res["error"])
+    else:
+        st.success(f"Akar aproksimasi: {res['result']:.10f}")
+        st.write(f"f(akar) ≈ {res['f(c)']:.4e}")
+        st.write(f"Iterasi: {res['iterations']}")
+        if res.get("warning"):
+            st.warning(res["warning"])
