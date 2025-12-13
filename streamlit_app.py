@@ -74,3 +74,7 @@ if st.button("Jalankan Bisection") and func_ok:
         df = res["table"]
         st.subheader("Tabel Iterasi")
         st.dataframe(df.style.format({"a":"{:.8f}","b":"{:.8f}","c":"{:.8f}","f(a)":"{:.6e}","f(b)":"{:.6e}","f(c)":"{:.6e}","interval_length":"{:.8e}"}))
+
+# Footer: tips
+st.markdown("---")
+st.write("Tips: Pastikan f(a) dan f(b) memiliki tanda berlawanan. Untuk fungsi dengan domain terbatas (log, sqrt), pilih interval yang valid.")
