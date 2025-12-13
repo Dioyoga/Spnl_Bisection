@@ -69,3 +69,8 @@ if st.button("Jalankan Bisection") and func_ok:
         st.write(f"Iterasi: {res['iterations']}")
         if res.get("warning"):
             st.warning(res["warning"])
+
+  # show table
+        df = res["table"]
+        st.subheader("Tabel Iterasi")
+        st.dataframe(df.style.format({"a":"{:.8f}","b":"{:.8f}","c":"{:.8f}","f(a)":"{:.6e}","f(b)":"{:.6e}","f(c)":"{:.6e}","interval_length":"{:.8e}"}))
