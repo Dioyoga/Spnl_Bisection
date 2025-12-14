@@ -75,6 +75,14 @@ if st.button("Jalankan Bisection") and func_ok:
         st.subheader("Tabel Iterasi")
         st.dataframe(df.style.format({"a":"{:.8f}","b":"{:.8f}","c":"{:.8f}","f(a)":"{:.6e}","f(b)":"{:.6e}","f(c)":"{:.6e}","interval_length":"{:.8e}"}))
 
+        # plot konvergensi c vs iter
+        fig, ax = plt.subplots()
+        ax.plot(df["iter"], df["c"], marker='o')
+        ax.set_xlabel("Iterasi")
+        ax.set_ylabel("Nilai c (aproks)")
+        ax.set_title("Konvergensi akar terhadap iterasi")
+        ax.grid(True)
+        st.pyplot(fig)
 
 # Footer: tips
 st.markdown("---")
