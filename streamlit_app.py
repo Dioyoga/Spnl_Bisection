@@ -75,7 +75,7 @@ if st.button("Jalankan Bisection") and func_ok:
         st.subheader("Tabel Iterasi")
         st.dataframe(df.style.format({"a":"{:.8f}","b":"{:.8f}","c":"{:.8f}","f(a)":"{:.6e}","f(b)":"{:.6e}","f(c)":"{:.6e}","interval_length":"{:.8e}"}))
 
-        # plot konvergensi c vs iter
+         # plot konvergensi c vs iter
         fig, ax = plt.subplots()
         ax.plot(df["iter"], df["c"], marker='o')
         ax.set_xlabel("Iterasi")
@@ -83,6 +83,15 @@ if st.button("Jalankan Bisection") and func_ok:
         ax.set_title("Konvergensi akar terhadap iterasi")
         ax.grid(True)
         st.pyplot(fig)
+
+        # plot interval length vs iter (log scale)
+        fig2, ax2 = plt.subplots()
+        ax2.semilogy(df["iter"], df["interval_length"], marker='o')
+        ax2.set_xlabel("Iterasi")
+        ax2.set_ylabel("Panjang interval (log scale)")
+        ax2.set_title("Panjang interval vs Iterasi")
+        ax2.grid(True, which='both')
+        st.pyplot(fig2)
 
 # Footer: tips
 st.markdown("---")
